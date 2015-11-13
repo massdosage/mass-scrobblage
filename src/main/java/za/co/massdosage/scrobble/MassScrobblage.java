@@ -42,7 +42,6 @@ public class MassScrobblage {
     Reader configReader = new FileReader(configFile);
     Properties configuration = new Properties();
     configuration.load(configReader);
-    log.info("Loaded config " + configuration);
 
     String apiKey = extractProperty(configuration, PROPERTY_API_KEY);
     String secret = extractProperty(configuration, PROPERTY_SECRET);
