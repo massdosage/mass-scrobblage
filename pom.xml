@@ -8,7 +8,22 @@
   <packaging>jar</packaging>
 
   <name>mass-scrobblage</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/massdosage/mass-scrobblage</url>
+  <inceptionYear>2015</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git@github.massdosage/${project.artifactId}.git</connection>
+    <developerConnection>scm:git:git@github.massdosage/${project.artifactId}.git</developerConnection>
+    <url>https://github.com/massdosage/hotels-oss-plugin-config</url>
+    <tag>HEAD</tag>
+  </scm>
 
   <!-- TODO use license plugin to add license to all files -->
 
