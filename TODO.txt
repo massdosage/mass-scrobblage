@@ -1,4 +1,4 @@
-* TODO's in pom
 * get package and try a run from command line on a real flac/mp3
+* output version from manifest on startup
 * add example properties file
-* get .sh script working
+* get .sh script working (see TODO in pom)
