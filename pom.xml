@@ -25,11 +25,10 @@
     <tag>HEAD</tag>
   </scm>
 
-  <!-- TODO use license plugin to add license to all files -->
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.7</slf4j.version>
+    <hotels.oss.plugin.config.version>1.0.2</hotels.oss.plugin.config.version>
   </properties>
 
   <build>
@@ -43,6 +42,33 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.9</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.hotels</groupId>
+                  <artifactId>hotels-oss-plugin-config</artifactId>
+                  <version>${hotels.oss.plugin.config.version}</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}/plugin-config</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <!-- TODO: below isn't putting script in, also not marking main executable -->
         <!-- TODO: need versioning in Manifest and output on startup -->
@@ -64,7 +90,45 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>2.10</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.hotels</groupId>
+            <artifactId>hotels-oss-plugin-config</artifactId>
+            <version>${hotels.oss.plugin.config.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <header>file://${project.build.directory}/plugin-config/mycila/APACHE-2.txt</header>
+          <headerDefinitions>
+            <headerDefinition>file://${project.build.directory}/plugin-config/mycila/hotels-definitions.xml</headerDefinition>
+          </headerDefinitions>
+          <properties>
+            <owner>Mass Dosage</owner>
+          </properties>
+          <includes>
+            <include>src/main/java/**</include>
+            <include>src/main/resources/*.xml</include>
+            <include>src/test/java/**</include>
+            <include>src/test/resources/*.xml</include>
+          </includes>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>format</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
+    
   </build>
 
   <dependencies>
