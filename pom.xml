@@ -77,18 +77,14 @@
       </plugin>
 
       <plugin>
-        <!-- TODO: below isn't putting script in, also not marking main executable -->
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>${maven.assembly.plugin.version}</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>bin</descriptorRef>
-          </descriptorRefs>
+          <descriptor>src/main/assembly/bin.xml</descriptor>
+          <!-- finalName>${project.artifactId}</finalName -->
         </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>

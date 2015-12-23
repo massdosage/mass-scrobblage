@@ -1,3 +1,4 @@
 #!/bin/sh
+export CLASSPATH=.:lib/*
+java za.co.massdosage.scrobble.MassScrobblage $@
 
-java -jar mass-scrobblage.jar

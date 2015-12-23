@@ -15,6 +15,7 @@
  */
 package za.co.massdosage.scrobble;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -26,6 +27,7 @@ public class MassScrobblageTest {
   @Rule
   public DataFolder dataFolder = new RootDataFolder();
 
+  @Ignore("This test only works as an integration test and requires a valid properties file on the classpath")
   @Test
   public void integration() throws Exception {
     MassScrobblage.main(new String[] {dataFolder.getFolder().getAbsolutePath()});

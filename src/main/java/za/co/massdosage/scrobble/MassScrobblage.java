@@ -18,8 +18,10 @@ package za.co.massdosage.scrobble;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -27,7 +29,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.Map.Entry;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -38,19 +44,38 @@ public class MassScrobblage {
   private static final String PROPERTY_API_KEY = "api.key";
   private static final String PROPERTY_SECRET = "secret";
 
+  private static final String DEFAULT_PROPERTIES_FILE_NAME = "mass-scrobblage.properties";
+
   private static Logger log = Logger.getLogger(MassScrobblage.class);
 
+  private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
+
+  private static void outputVersionInfo() {
+
+    InputStream manifestStream = MassScrobblage.class
+        .getResourceAsStream("/META-INF/maven/za.co.massdosage/mass-scrobblage/pom.properties");
+    try {
+      if (manifestStream != null) {
+        // TODO: pull values out of stream and log them
+      }
+    } finally {
+      IOUtils.closeQuietly(manifestStream);
+    }
+  }
+
   public static void main(String args[]) throws Exception {
+    JulToSlf4jBridge bridge = new JulToSlf4jBridge();
+
+    outputVersionInfo();
 
     if (args.length < 1) {
       System.out.println("Usage: MassScrobblage path");
       System.exit(-1);
     }
-    JulToSlf4jBridge bridge = new JulToSlf4jBridge();
 
-    URL resource = MassScrobblage.class.getResource("/mass-scrobblage.properties");
+    URL resource = MassScrobblage.class.getResource("/" + DEFAULT_PROPERTIES_FILE_NAME);
     if (resource == null) {
-      throw new IOException("Property file not found on classpath");
+      throw new IOException("Default property file (" + DEFAULT_PROPERTIES_FILE_NAME + ") not found on classpath");
     }
     File configFile = new File(resource.toURI());
     log.info("Loading configuration from: " + configFile.getAbsolutePath());
@@ -68,7 +93,7 @@ public class MassScrobblage {
   }
 
   private static String extractProperty(Properties configuration, String propertyName) throws IOException {
-    String value = configuration.getProperty(propertyName);
+    String value = StringUtils.trimToNull(configuration.getProperty(propertyName));
     if (value == null) {
       throw new IOException("No configuration value found for " + propertyName);
     }
