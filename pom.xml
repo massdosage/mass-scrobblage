@@ -19,9 +19,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git@github.massdosage/${project.artifactId}.git</connection>
-    <developerConnection>scm:git:git@github.massdosage/${project.artifactId}.git</developerConnection>
-    <url>https://github.com/massdosage/hotels-oss-plugin-config</url>
+    <connection>scm:git:git@github.com:massdosage/mass-scrobblage.git</connection>
+    <developerConnection>scm:git:git@github.com:massdosage/mass-scrobblage.git</developerConnection>
+    <url>https://github.com/massdosage/mass-scrobblage.git</url>
     <tag>HEAD</tag>
   </scm>
 
