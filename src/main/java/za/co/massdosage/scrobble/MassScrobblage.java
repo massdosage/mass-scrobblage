@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,15 +52,17 @@ public class MassScrobblage {
   private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
 
   private static void outputVersionInfo() {
-
-    InputStream manifestStream = MassScrobblage.class
+    InputStream propertyStream = MassScrobblage.class
         .getResourceAsStream("/META-INF/maven/za.co.massdosage/mass-scrobblage/pom.properties");
     try {
-      if (manifestStream != null) {
-        // TODO: pull values out of stream and log them
+      if (propertyStream != null) {
+        String properties = IOUtils.toString(propertyStream, Charsets.UTF_8.toString());
+        log.debug(properties);
       }
+    } catch (IOException e) {
+      log.warn("Error reading version information", e);
     } finally {
-      IOUtils.closeQuietly(manifestStream);
+      IOUtils.closeQuietly(propertyStream);
     }
   }
 
