@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Mass Dosage
+ * Copyright (C) 2015-2016 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,8 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jdom.JDOMException;
 
+import de.umass.lastfm.scrobble.ScrobbleResult;
+
 import de.umass.lastfm.Authenticator;
 import de.umass.lastfm.Session;
 import de.umass.lastfm.Track;
@@ -63,13 +65,13 @@ public class FileScrobbler {
     supportedFileTypes.add(".ogg");
     supportedFileTypes.add(".flac");
   }
-  
+
   public FileScrobbler(String apiKey, String secret, String userName, String passwordHash) {
     this.apiKey = apiKey;
     this.secret = secret;
     this.userName = userName;
     this.passwordHash = passwordHash;
-    //TODO: do we care about timezones here?
+
     scrobbleTime = (int) ((new Date()).getTime() / 1000L);
     log.debug("Initialising scrobbler for user '" + userName + "'");
   }
@@ -91,18 +93,15 @@ public class FileScrobbler {
       return;
     }
     Session session = authenticate();
+    if (session == null) {
+      log.warn("Unable to authenticate, please check whether your credentials are correct");
+      return;
+    }
     scrobble(allScrobbles, session);
   }
 
   private Session authenticate() throws IOException, JDOMException, URISyntaxException {
-    // String authToken = DigestUtils.md5Hex((new StringBuilder())
-    // .append(userName).append(passwordHash).toString());
-
-    // String username, String password, String apiKey, String secret
-    Session session = Authenticator.getMobileSession(userName, passwordHash, apiKey, secret);
-    return session;
-    // String sessionKey = Scrobbler2.getMobileSession(userName, authToken);
-    // return Session.createSession(apiKey, secret, sessionKey);
+    return Authenticator.getMobileSession(userName, passwordHash, apiKey, secret);
   }
 
   private List<ScrobbleData> extractScrobbles(File scrobbleFolder) throws CannotReadException, IOException,
@@ -110,21 +109,17 @@ public class FileScrobbler {
     List<ScrobbleData> scrobbles = new ArrayList<ScrobbleData>();
     File folders[] = scrobbleFolder.listFiles((FileFilter) DirectoryFileFilter.INSTANCE);
     if (folders != null) {
-      File arr$[] = folders;
-      int len$ = arr$.length;
-      for (int i$ = 0; i$ < len$; i$++) {
-        File folder = arr$[i$];
+      for (File folder : folders) {
         scrobbles.addAll(extractScrobbles(folder));
       }
-
     }
     File files[] = scrobbleFolder.listFiles((FileFilter) new SuffixFileFilter(supportedFileTypes));
     if (files != null) {
       List sortedFiles = Arrays.asList(files);
       Collections.sort(sortedFiles, new FileNameComparator());
       ScrobbleData scrobbleData;
-      for (Iterator i$ = sortedFiles.iterator(); i$.hasNext(); scrobbles.add(scrobbleData)) {
-        File file = (File) i$.next();
+      for (Iterator iterator = sortedFiles.iterator(); iterator.hasNext(); scrobbles.add(scrobbleData)) {
+        File file = (File) iterator.next();
         scrobbleData = extractScrobble(file);
       }
 
@@ -162,18 +157,14 @@ public class FileScrobbler {
   }
 
   private void scrobble(List scrobbles, Session session) {
-    de.umass.lastfm.scrobble.ScrobbleResult result;
-    for (Iterator i$ = scrobbles.iterator(); i$.hasNext(); System.out.println((new StringBuilder())
-        .append("Scrobble WS call result: ")
-        .append(result)
-        .toString())) {
-      ScrobbleData scrobble = (ScrobbleData) i$.next();
+    for (Iterator iterator = scrobbles.iterator(); iterator.hasNext();) {
+      ScrobbleData scrobble = (ScrobbleData) iterator.next();
       scrobble.setTimestamp(scrobbleTime);
       scrobbleTime = scrobbleTime + scrobble.getDuration();
-      System.out.println((new StringBuilder()).append("About to scrobble ").append(scrobble).toString());
-      result = Track.scrobble(scrobble, session);
+      log.info("About to scrobble " + scrobble.toString());
+      ScrobbleResult result = Track.scrobble(scrobble, session);
+      log.info("Scrobble WS call result: " + result.toString());
     }
-
   }
 
 }
