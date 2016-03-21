@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2016 Mass Dosage
+ * Copyright (C) 2015 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -42,28 +41,29 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jdom.JDOMException;
 
-import de.umass.lastfm.scrobble.ScrobbleResult;
-
 import de.umass.lastfm.Authenticator;
 import de.umass.lastfm.Session;
 import de.umass.lastfm.Track;
 import de.umass.lastfm.scrobble.ScrobbleData;
+import de.umass.lastfm.scrobble.ScrobbleResult;
 
 public class FileScrobbler {
 
-  private Logger log = Logger.getLogger(getClass());
-  private String apiKey;
-  private String secret;
-  private String userName;
-  private String passwordHash;
+  private final Logger log = Logger.getLogger(getClass());
+  private final String apiKey;
+  private final String secret;
+  private final String userName;
+  private final String passwordHash;
   private int scrobbleTime;
-  private static List supportedFileTypes;
+  private static List<String> supportedFileTypes;
 
   static {
-    supportedFileTypes = new ArrayList();
+    supportedFileTypes = new ArrayList<>();
     supportedFileTypes.add(".mp3");
     supportedFileTypes.add(".ogg");
     supportedFileTypes.add(".flac");
+    supportedFileTypes.add(".m4a");
+    supportedFileTypes.add(".wma");
   }
 
   public FileScrobbler(String apiKey, String secret, String userName, String passwordHash) {
@@ -104,8 +104,8 @@ public class FileScrobbler {
     return Authenticator.getMobileSession(userName, passwordHash, apiKey, secret);
   }
 
-  private List<ScrobbleData> extractScrobbles(File scrobbleFolder) throws CannotReadException, IOException,
-      TagException, ReadOnlyFileException, InvalidAudioFrameException {
+  private List<ScrobbleData> extractScrobbles(File scrobbleFolder)
+    throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
     List<ScrobbleData> scrobbles = new ArrayList<ScrobbleData>();
     File folders[] = scrobbleFolder.listFiles((FileFilter) DirectoryFileFilter.INSTANCE);
     if (folders != null) {
@@ -127,8 +127,8 @@ public class FileScrobbler {
     return scrobbles;
   }
 
-  private ScrobbleData extractScrobble(File file) throws CannotReadException, IOException, TagException,
-      ReadOnlyFileException, InvalidAudioFrameException {
+  private ScrobbleData extractScrobble(File file)
+    throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
     log.info((new StringBuilder()).append("Extracting scrobble data from ").append(file).toString());
     AudioFile audioFile = AudioFileIO.read(file);
     Tag tag = audioFile.getTag();
