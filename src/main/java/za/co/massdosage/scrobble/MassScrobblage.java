@@ -19,21 +19,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-import java.util.Map.Entry;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
-import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -49,14 +39,12 @@ public class MassScrobblage {
 
   private static Logger log = Logger.getLogger(MassScrobblage.class);
 
-  private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
-
   private static void outputVersionInfo() {
     InputStream propertyStream = MassScrobblage.class
         .getResourceAsStream("/META-INF/maven/za.co.massdosage/mass-scrobblage/pom.properties");
     try {
       if (propertyStream != null) {
-        String properties = IOUtils.toString(propertyStream, Charsets.UTF_8.toString());
+        String properties = IOUtils.toString(propertyStream, StandardCharsets.UTF_8.displayName());
         log.debug(properties);
       }
     } catch (IOException e) {
