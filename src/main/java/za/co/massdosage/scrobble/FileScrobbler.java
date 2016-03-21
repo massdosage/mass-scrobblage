@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Mass Dosage
+ * Copyright (C) 2015-2016 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,11 @@ import de.umass.lastfm.scrobble.ScrobbleResult;
 
 public class FileScrobbler {
 
-  private final Logger log = Logger.getLogger(getClass());
-  private final String apiKey;
-  private final String secret;
-  private final String userName;
-  private final String passwordHash;
+  private Logger log = Logger.getLogger(getClass());
+  private String apiKey;
+  private String secret;
+  private String userName;
+  private String passwordHash;
   private int scrobbleTime;
   private static List<String> supportedFileTypes;
 
@@ -106,7 +106,7 @@ public class FileScrobbler {
 
   private List<ScrobbleData> extractScrobbles(File scrobbleFolder)
     throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-    List<ScrobbleData> scrobbles = new ArrayList<ScrobbleData>();
+    List<ScrobbleData> scrobbles = new ArrayList<>();
     File folders[] = scrobbleFolder.listFiles((FileFilter) DirectoryFileFilter.INSTANCE);
     if (folders != null) {
       for (File folder : folders) {
@@ -115,10 +115,10 @@ public class FileScrobbler {
     }
     File files[] = scrobbleFolder.listFiles((FileFilter) new SuffixFileFilter(supportedFileTypes));
     if (files != null) {
-      List sortedFiles = Arrays.asList(files);
+      List<File> sortedFiles = Arrays.asList(files);
       Collections.sort(sortedFiles, new FileNameComparator());
       ScrobbleData scrobbleData;
-      for (Iterator iterator = sortedFiles.iterator(); iterator.hasNext(); scrobbles.add(scrobbleData)) {
+      for (Iterator<File> iterator = sortedFiles.iterator(); iterator.hasNext(); scrobbles.add(scrobbleData)) {
         File file = (File) iterator.next();
         scrobbleData = extractScrobble(file);
       }

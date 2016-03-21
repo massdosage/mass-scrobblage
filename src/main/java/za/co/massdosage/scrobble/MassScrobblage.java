@@ -55,7 +55,7 @@ public class MassScrobblage {
   }
 
   public static void main(String args[]) throws Exception {
-    JulToSlf4jBridge bridge = new JulToSlf4jBridge();
+    new JulToSlf4jBridge();
 
     outputVersionInfo();
 
