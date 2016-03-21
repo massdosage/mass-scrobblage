@@ -18,16 +18,14 @@ package za.co.massdosage.scrobble;
 import java.io.File;
 import java.util.Comparator;
 
-public class FileNameComparator implements Comparator {
+public class FileNameComparator implements Comparator<File> {
 
   public FileNameComparator() {
   }
 
-  public int compare(File o1, File o2) {
-    return o1.getName().compareTo(o2.getName());
+  @Override
+  public int compare(File file, File file2) {
+    return file.getName().compareTo(file2.getName());
   }
 
-  public int compare(Object x0, Object x1) {
-    return compare((File) x0, (File) x1);
-  }
 }
