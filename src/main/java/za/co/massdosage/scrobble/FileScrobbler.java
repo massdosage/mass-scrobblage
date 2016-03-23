@@ -49,11 +49,11 @@ import de.umass.lastfm.scrobble.ScrobbleResult;
 
 public class FileScrobbler {
 
-  private Logger log = Logger.getLogger(getClass());
-  private String apiKey;
-  private String secret;
-  private String userName;
-  private String passwordHash;
+  private final Logger log = Logger.getLogger(getClass());
+  private final String apiKey;
+  private final String secret;
+  private final String userName;
+  private final String passwordHash;
   private int scrobbleTime;
   private static List<String> supportedFileTypes;
 
@@ -119,7 +119,7 @@ public class FileScrobbler {
       Collections.sort(sortedFiles, new FileNameComparator());
       ScrobbleData scrobbleData;
       for (Iterator<File> iterator = sortedFiles.iterator(); iterator.hasNext(); scrobbles.add(scrobbleData)) {
-        File file = (File) iterator.next();
+        File file = iterator.next();
         scrobbleData = extractScrobble(file);
       }
 
@@ -156,9 +156,9 @@ public class FileScrobbler {
     return scrobbleData;
   }
 
-  private void scrobble(List scrobbles, Session session) {
-    for (Iterator iterator = scrobbles.iterator(); iterator.hasNext();) {
-      ScrobbleData scrobble = (ScrobbleData) iterator.next();
+  private void scrobble(List<ScrobbleData> scrobbles, Session session) {
+    for (Iterator<ScrobbleData> iterator = scrobbles.iterator(); iterator.hasNext();) {
+      ScrobbleData scrobble = iterator.next();
       scrobble.setTimestamp(scrobbleTime);
       scrobbleTime = scrobbleTime + scrobble.getDuration();
       log.info("About to scrobble " + scrobble.toString());

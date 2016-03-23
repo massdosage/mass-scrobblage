@@ -15,10 +15,6 @@
  */
 package za.co.massdosage.scrobble;
 
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**

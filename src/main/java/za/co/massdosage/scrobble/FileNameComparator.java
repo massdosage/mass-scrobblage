@@ -20,9 +20,6 @@ import java.util.Comparator;
 
 public class FileNameComparator implements Comparator<File> {
 
-  public FileNameComparator() {
-  }
-
   @Override
   public int compare(File file, File file2) {
     return file.getName().compareTo(file2.getName());

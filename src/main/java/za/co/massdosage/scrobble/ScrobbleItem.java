@@ -17,6 +17,9 @@ package za.co.massdosage.scrobble;
 
 public class ScrobbleItem {
 
+  private String artistName;
+  private String trackName;
+
   public ScrobbleItem() {
   }
 
@@ -41,6 +44,4 @@ public class ScrobbleItem {
     this.trackName = trackName;
   }
 
-  private String artistName;
-  private String trackName;
 }

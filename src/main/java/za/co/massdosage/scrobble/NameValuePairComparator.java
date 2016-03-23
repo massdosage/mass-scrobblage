@@ -16,18 +16,14 @@
 package za.co.massdosage.scrobble;
 
 import java.util.Comparator;
+
 import org.apache.http.NameValuePair;
 
-public class NameValuePairComparator implements Comparator {
+public class NameValuePairComparator implements Comparator<NameValuePair> {
 
-  public NameValuePairComparator() {
+  @Override
+  public int compare(NameValuePair pair1, NameValuePair pair2) {
+    return pair1.getName().compareTo(pair2.getName());
   }
 
-  public int compare(NameValuePair o1, NameValuePair o2) {
-    return o1.getName().compareTo(o2.getName());
-  }
-
-  public int compare(Object x0, Object x1) {
-    return compare((NameValuePair) x0, (NameValuePair) x1);
-  }
 }
