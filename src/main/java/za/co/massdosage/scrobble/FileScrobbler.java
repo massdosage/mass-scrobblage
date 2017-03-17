@@ -82,7 +82,7 @@ public class FileScrobbler {
       return;
     }
     log.info("About to scrobble contents of " + folder.getAbsolutePath());
-    List<ScrobbleData> allScrobbles = new ArrayList<ScrobbleData>();
+    List<ScrobbleData> allScrobbles = new ArrayList<>();
     if (folder.isDirectory()) {
       allScrobbles.addAll(extractScrobbles(folder));
     } else {
@@ -127,7 +127,8 @@ public class FileScrobbler {
     return scrobbles;
   }
 
-  private ScrobbleData extractScrobble(File file)
+  // Visible for testing
+  ScrobbleData extractScrobble(File file)
     throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
     log.info((new StringBuilder()).append("Extracting scrobble data from ").append(file).toString());
     AudioFile audioFile = AudioFileIO.read(file);
@@ -139,6 +140,19 @@ public class FileScrobbler {
     String albumName = StringUtils.trimToNull(tag.getFirst(FieldKey.ALBUM));
     AudioHeader audioHeader = audioFile.getAudioHeader();
     int trackLength = audioHeader.getTrackLength();
+    ScrobbleData scrobbleData = createScrobbleData(artistName, trackName, albumArtistName, albumName, trackNumber,
+        trackLength);
+    return scrobbleData;
+  }
+
+  // Visible for testing
+  ScrobbleData createScrobbleData(
+      String artistName,
+      String trackName,
+      String albumArtistName,
+      String albumName,
+      String trackNumber,
+      int trackLength) {
     ScrobbleData scrobbleData = new ScrobbleData();
     scrobbleData.setArtist(artistName);
     scrobbleData.setTrack(trackName);
@@ -149,6 +163,10 @@ public class FileScrobbler {
       scrobbleData.setAlbum(albumName);
     }
     if (trackNumber != null) {
+      int slashIndex = trackNumber.indexOf("/");
+      if (slashIndex > 0) {
+        trackNumber = trackNumber.substring(0, slashIndex);
+      }
       scrobbleData.setTrackNumber(Integer.valueOf(trackNumber).intValue());
     }
     scrobbleTime = scrobbleTime - trackLength;
@@ -157,8 +175,7 @@ public class FileScrobbler {
   }
 
   private void scrobble(List<ScrobbleData> scrobbles, Session session) {
-    for (Iterator<ScrobbleData> iterator = scrobbles.iterator(); iterator.hasNext();) {
-      ScrobbleData scrobble = iterator.next();
+    for (ScrobbleData scrobble : scrobbles) {
       scrobble.setTimestamp(scrobbleTime);
       scrobbleTime = scrobbleTime + scrobble.getDuration();
       log.info("About to scrobble " + scrobble.toString());
