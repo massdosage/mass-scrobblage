@@ -42,6 +42,7 @@ import org.jaudiotagger.tag.TagException;
 import org.jdom.JDOMException;
 
 import de.umass.lastfm.Authenticator;
+import de.umass.lastfm.Caller;
 import de.umass.lastfm.Session;
 import de.umass.lastfm.Track;
 import de.umass.lastfm.scrobble.ScrobbleData;
@@ -56,6 +57,7 @@ public class FileScrobbler {
   private final String passwordHash;
   private int scrobbleTime;
   private static List<String> supportedFileTypes;
+  private static final String DEFAULT_API_ROOT = "https://ws.audioscrobbler.com/2.0/";
 
   static {
     supportedFileTypes = new ArrayList<>();
@@ -66,14 +68,21 @@ public class FileScrobbler {
     supportedFileTypes.add(".wma");
   }
 
-  public FileScrobbler(String apiKey, String secret, String userName, String passwordHash) {
+  public FileScrobbler(String apiKey, String secret, String userName, String passwordHash, String apiRoot) {
     this.apiKey = apiKey;
     this.secret = secret;
     this.userName = userName;
     this.passwordHash = passwordHash;
 
+    Caller.getInstance().setApiRootUrl(apiRoot);
+    log.debug("API root set to " + apiRoot);
+
     scrobbleTime = (int) ((new Date()).getTime() / 1000L);
     log.debug("Initialising scrobbler for user '" + userName + "'");
+  }
+
+  public FileScrobbler(String apiKey, String secret, String userName, String passwordHash) {
+    this(apiKey, secret, userName, passwordHash, DEFAULT_API_ROOT);
   }
 
   public void scrobbleFolder(File folder) throws Exception {
