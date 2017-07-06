@@ -26,7 +26,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -113,7 +115,8 @@ public class FileScrobbler {
     return Authenticator.getMobileSession(userName, passwordHash, apiKey, secret);
   }
 
-  private List<ScrobbleData> extractScrobbles(File scrobbleFolder)
+  // Visible for testing
+  List<ScrobbleData> extractScrobbles(File scrobbleFolder)
     throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
     List<ScrobbleData> scrobbles = new ArrayList<>();
     File folders[] = scrobbleFolder.listFiles((FileFilter) DirectoryFileFilter.INSTANCE);
@@ -122,7 +125,8 @@ public class FileScrobbler {
         scrobbles.addAll(extractScrobbles(folder));
       }
     }
-    File files[] = scrobbleFolder.listFiles((FileFilter) new SuffixFileFilter(supportedFileTypes));
+    FileFilter fileFilter = new AndFileFilter(HiddenFileFilter.VISIBLE, new SuffixFileFilter(supportedFileTypes));
+    File files[] = scrobbleFolder.listFiles(fileFilter);
     if (files != null) {
       List<File> sortedFiles = Arrays.asList(files);
       Collections.sort(sortedFiles, new FileNameComparator());

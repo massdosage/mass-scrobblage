@@ -19,28 +19,48 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
 
 import de.umass.lastfm.scrobble.ScrobbleData;
+import fm.last.commons.test.file.ClassDataFolder;
 import fm.last.commons.test.file.DataFolder;
-import fm.last.commons.test.file.RootDataFolder;
 
 public class FileScrobblerTest {
 
   @Rule
-  public DataFolder dataFolder = new RootDataFolder();
+  public DataFolder dataFolder = new ClassDataFolder();
 
   @Test
   public void authenticationFailure() throws Exception {
     FileScrobbler scrobbler = new FileScrobbler("invalidKey", "invalidSecret", "scrobtestuser", "invalidHash");
-    scrobbler.scrobbleFolder(dataFolder.getFolder());
+    scrobbler.scrobbleFolder(dataFolder.getFile("nohidden"));
+  }
+
+  @Test
+  public void extractScrobbleDataFromFolder() throws Exception {
+    File audioFolder = dataFolder.getFile("nohidden");
+    FileScrobbler scrobbler = new FileScrobbler("key", "secret", "scrobtestuser", "hash");
+    List<ScrobbleData> scrobbleData = scrobbler.extractScrobbles(audioFolder);
+    assertThat(scrobbleData.size(), is(2));
+  }
+
+  @Test
+  public void extractScrobbleDataFromFolderWithHiddenFile() throws Exception {
+    File audioFolder = dataFolder.getFile("hidden");
+    FileScrobbler scrobbler = new FileScrobbler("key", "secret", "scrobtestuser", "hash");
+    List<ScrobbleData> extracted = scrobbler.extractScrobbles(audioFolder);
+    assertThat(extracted.size(), is(1));
+    ScrobbleData scrobbleData = extracted.get(0);
+    assertThat(scrobbleData.getArtist(), is("DJ Mass Dosage"));
+    assertThat(scrobbleData.getTrack(), is("How DJ can you Dosed Mix"));
   }
 
   @Test
   public void extractScrobbleDataFromFile() throws Exception {
-    File mp3File = dataFolder.getFile("test2.mp3");
+    File mp3File = dataFolder.getFile("nohidden/test2.mp3");
     FileScrobbler scrobbler = new FileScrobbler("key", "secret", "scrobtestuser", "hash");
     ScrobbleData scrobbleData = scrobbler.extractScrobble(mp3File);
     assertThat(scrobbleData.getArtist(), is("ArtistName"));
