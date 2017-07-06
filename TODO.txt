@@ -1,0 +1,1 @@
+- update to latest license plugin version which does inceptionYear automatically, can simplify pom
