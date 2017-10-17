@@ -3,10 +3,8 @@
 
   <groupId>za.co.massdosage</groupId>
   <artifactId>mass-scrobblage</artifactId>
-  <version>1.1.1</version>
-  <packaging>jar</packaging>
+  <version>1.1.2-SNAPSHOT</version>
 
-  <name>mass-scrobblage</name>
   <url>https://github.com/massdosage/mass-scrobblage</url>
   <inceptionYear>2015</inceptionYear>
 
