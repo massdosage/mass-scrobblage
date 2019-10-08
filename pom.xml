@@ -109,7 +109,7 @@
         </configuration>
       </plugin>
 
-      <!-- used to determine the current year -->
+      
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
@@ -137,6 +137,11 @@
             <groupId>com.hotels</groupId>
             <artifactId>hotels-oss-plugin-config</artifactId>
             <version>${hotels.oss.plugin.config.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin-git</artifactId>
+            <version>${license.maven.plugin.version}</version>
           </dependency>
         </dependencies>
         <configuration>
