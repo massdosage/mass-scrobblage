@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Mass Dosage
+ * Copyright (C) 2015-2019 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,7 +114,7 @@ public class FileScrobbler {
   private Session authenticate() throws IOException, JDOMException, URISyntaxException {
     return Authenticator.getMobileSession(userName, passwordHash, apiKey, secret);
   }
-
+  
   // Visible for testing
   List<ScrobbleData> extractScrobbles(File scrobbleFolder)
     throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
