@@ -3,7 +3,7 @@
 
   <groupId>za.co.massdosage</groupId>
   <artifactId>mass-scrobblage</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.1.2</version>
 
   <url>https://github.com/massdosage/mass-scrobblage</url>
   <inceptionYear>2015</inceptionYear>
@@ -19,7 +19,7 @@
     <connection>scm:git:git@github.com:massdosage/mass-scrobblage.git</connection>
     <developerConnection>scm:git:git@github.com:massdosage/mass-scrobblage.git</developerConnection>
     <url>https://github.com/massdosage/mass-scrobblage.git</url>
-    <tag>HEAD</tag>
+    <tag>mass-scrobblage-1.1.2</tag>
   </scm>
 
   <properties>
