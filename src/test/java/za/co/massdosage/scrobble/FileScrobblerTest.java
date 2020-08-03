@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2019 Mass Dosage
+ * Copyright (C) 2015-2020 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package za.co.massdosage.scrobble;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class FileScrobblerTest {
     File audioFolder = dataFolder.getFile("nohidden");
     FileScrobbler scrobbler = new FileScrobbler("key", "secret", "scrobtestuser", "hash");
     List<ScrobbleData> scrobbleData = scrobbler.extractScrobbles(audioFolder);
-    assertThat(scrobbleData.size(), is(2));
+    assertThat(scrobbleData.size(), is(3));
   }
 
   @Test
@@ -68,6 +69,19 @@ public class FileScrobblerTest {
     assertThat(scrobbleData.getAlbumArtist(), is("AlbumArtistName"));
     assertThat(scrobbleData.getAlbum(), is("AlbumName"));
     assertThat(scrobbleData.getTrackNumber(), is(1));
+    assertThat(scrobbleData.getDuration(), is(5));
+  }
+  
+  @Test
+  public void extractScrobbleInvalidTrackNumber() throws Exception {
+    File mp3File = dataFolder.getFile("nohidden/test-invalid-track-number.mp3");
+    FileScrobbler scrobbler = new FileScrobbler("key", "secret", "scrobtestuser", "hash");
+    ScrobbleData scrobbleData = scrobbler.extractScrobble(mp3File);
+    assertThat(scrobbleData.getArtist(), is("DJ Mass Dosage"));
+    assertThat(scrobbleData.getTrack(), is("How DJ can you Dosed Mix"));
+    assertThat(scrobbleData.getAlbumArtist(), is(nullValue()));
+    assertThat(scrobbleData.getAlbum(), is(nullValue()));
+    assertThat(scrobbleData.getTrackNumber(), is(-1));
     assertThat(scrobbleData.getDuration(), is(5));
   }
 

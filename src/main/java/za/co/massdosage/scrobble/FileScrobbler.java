@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2019 Mass Dosage
+ * Copyright (C) 2015-2020 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ public class FileScrobbler {
       String trackName,
       String albumArtistName,
       String albumName,
-      String trackNumber,
+      String trackNumberString,
       int trackLength) {
     ScrobbleData scrobbleData = new ScrobbleData();
     scrobbleData.setArtist(artistName);
@@ -175,12 +175,18 @@ public class FileScrobbler {
     if (albumName != null) {
       scrobbleData.setAlbum(albumName);
     }
-    if (trackNumber != null) {
-      int slashIndex = trackNumber.indexOf("/");
+    if (trackNumberString != null) {
+      int slashIndex = trackNumberString.indexOf("/");
       if (slashIndex > 0) {
-        trackNumber = trackNumber.substring(0, slashIndex);
+        trackNumberString = trackNumberString.substring(0, slashIndex);
       }
-      scrobbleData.setTrackNumber(Integer.valueOf(trackNumber).intValue());
+      try {
+        int trackNumber = Integer.parseInt(trackNumberString);
+        scrobbleData.setTrackNumber(trackNumber);
+      } catch(NumberFormatException e) {
+        log.warn("Error extracting track number, " + e.getMessage());
+      }
+      
     }
     scrobbleTime = scrobbleTime - trackLength;
     scrobbleData.setDuration(trackLength);
