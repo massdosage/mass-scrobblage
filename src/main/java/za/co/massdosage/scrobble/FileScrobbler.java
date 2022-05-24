@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2020 Mass Dosage
+ * Copyright (C) 2015-2022 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -42,6 +41,8 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jdom.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.umass.lastfm.Authenticator;
 import de.umass.lastfm.Caller;
@@ -52,7 +53,7 @@ import de.umass.lastfm.scrobble.ScrobbleResult;
 
 public class FileScrobbler {
 
-  private final Logger log = Logger.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
   private final String apiKey;
   private final String secret;
   private final String userName;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2019 Mass Dosage
+ * Copyright (C) 2015-2022 Mass Dosage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MassScrobblage {
 
@@ -37,7 +38,7 @@ public class MassScrobblage {
 
   private static final String DEFAULT_PROPERTIES_FILE_NAME = "mass-scrobblage.properties";
 
-  private static Logger log = Logger.getLogger(MassScrobblage.class);
+  private static Logger log = LoggerFactory.getLogger(MassScrobblage.class);
 
   private static void outputVersionInfo() {
     InputStream propertyStream = MassScrobblage.class
